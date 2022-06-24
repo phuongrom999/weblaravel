@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin\users;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -12,19 +12,19 @@ class Logincontroller extends Controller
     }
     
     public function store(Request $request){
+        if(Auth::attempt([
+            'email' => $request -> input('email'),
+            'password' => $request -> input('password')
+        ])){
+            return redirect() -> route('admin');
+        }
         $this -> validate($request,[
             'email'=>'required|email:filter',
             'password'=>'required'
         ]);
 
-        if(Auth::attempt([
-            'email'=>$request->input('email'),
-            'password'=>$request->input('password')
-    ],$request->input('remember'))){
-
-        return redirect()-> route('admin');
-
-        }
-        return redirect()->back();
+        
+       
     }
+
 }
